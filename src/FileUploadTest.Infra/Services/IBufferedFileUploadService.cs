@@ -4,5 +4,7 @@ namespace FileUploadTest.Infra.Services;
 
 public interface IBufferedFileUploadService
 {
-    Task<bool> UploadFile(IFormFile file);
+    Task<Guid?> UploadFile(IFormFile file);
+
+    Task<MemoryStream> Download(Guid fileGuid, string fileName, string filePath);
 }

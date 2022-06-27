@@ -4,32 +4,55 @@ namespace FileUploadTest.Infra.Services;
 
 public class BufferedFileUploadLocalService : IBufferedFileUploadService
 {
-    public async Task<bool> UploadFile(IFormFile file)
+    public async Task<Guid?> UploadFile(IFormFile file)
     {
         string path = "";
-        try
+
+        if (file.Length > 0)
         {
-            if (file.Length > 0)
+            path = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "UploadedFiles"));
+            if (!Directory.Exists(path))
             {
-                path = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "UploadedFiles"));
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                using (var fileStream = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
-                }
-                return true;
+                Directory.CreateDirectory(path);
             }
-            else
+
+            var id = Guid.NewId();
+            var newFileName = $"{id}___{file.FileName}";
+
+            if (File.Exists(Path.Combine(path,newFileName )))
             {
-                return false;
+                throw new Exception("File Copy Failed");
             }
+
+            using (var fileStream = new FileStream(Path.Combine(path, ), FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            return id;
         }
-        catch (Exception ex)
+        else
         {
-            throw new Exception("File Copy Failed", ex);
+            return null;
         }
+    }
+
+    public async Task<MemoryStream> Download(Guid fileGuid, string fileName, string filePath)
+    {
+        var memoryStream = new MemoryStream();
+
+        if (!Path.Combine(filePath, fileName))
+        {
+            throw new FileNotFoundException();
+        }
+        
+        using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Open))
+        {
+            await fileStream.CopyToAsync(memoryStream);
+        }
+        
+        memoryStream.Position = 0;
+
+        return memoryStream;
     }
 }
