@@ -1,4 +1,4 @@
-
+using Microsoft.AspNetCore.Http;
 
 namespace FileUploadTest.Infra.Services;
 
@@ -20,6 +20,14 @@ public class BufferedFileUploadLocalService : IBufferedFileUploadService
 
             BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+                
+            //you can check if the container exists or not, then determine to create it or not
+            bool isExist = containerClient.Exists();
+            if (!isExist)
+            {
+                containerClient.Create();
+            }
 
             BlobClient blobClient = containerClient.GetBlobClient(newFileName);
 
@@ -56,6 +64,6 @@ public class BufferedFileUploadLocalService : IBufferedFileUploadService
         await blobClient.DownloadToAsync(stream);
         stream.Position = 0;
 
-        return stream
+        return stream;
     }
 }

@@ -9,6 +9,7 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+      <PackageReference Include="Azure.Storage.Blobs" Version="12.13.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0-preview.5.22301.12" />
       <PackageReference Include="System.Reflection" Version="4.3.0" />
       <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
