@@ -4,7 +4,7 @@ namespace FileUploadTest.Infra.Services;
 
 public class BufferedFileUploadLocalService : IBufferedFileUploadService
 {
-    public async Task<Guid?> UploadFile(IFormFile file)
+    public async Task<Guid?> UploadFile(IFormFile file, string folderName)
     {
         string path = "";
 
@@ -37,7 +37,7 @@ public class BufferedFileUploadLocalService : IBufferedFileUploadService
         }
     }
 
-    public async Task<MemoryStream> Download(Guid fileGuid, string fileName, string filePath)
+    public async Task<MemoryStream> Download(Guid fileGuid, string fileName, string folderName)
     {
         var memoryStream = new MemoryStream();
 
